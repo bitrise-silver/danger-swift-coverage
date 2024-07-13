@@ -27,10 +27,14 @@ public enum Coverage {
 
     static func xcodeBuildCoverage(_ coveragePathType: CoveragePathType, minimumCoverage: Float, excludedTargets: [ExcludedTarget], hideProjectCoverage: Bool = false, fileManager: FileManager, xcodeBuildCoverageParser: XcodeBuildCoverageParsing.Type, xcresultFinder: XcresultBundleFinding.Type, danger: DangerDSL) {
         let paths = modifiedFilesAbsolutePaths(fileManager: fileManager, danger: danger)
+        danger.message("X1: \(paths)")
 
         do {
+            danger.message("X2: \(paths)")
             let xcresultBundlePath = try coveragePathType.xcresultBundlePath(xcresultFinder: xcresultFinder, fileManager: fileManager)
+            danger.message("X3: \(xcresultBundlePath)")
             let report = try xcodeBuildCoverageParser.coverage(xcresultBundlePath: xcresultBundlePath, files: paths, excludedTargets: excludedTargets, hideProjectCoverage: hideProjectCoverage)
+            danger.message("X4: \(report)")
             sendReport(report, minumumCoverage: minimumCoverage, danger: danger)
         } catch {
             danger.fail("Failed to get the coverage - Error: \(error.localizedDescription)")
